@@ -27,7 +27,7 @@ func loadConfig(name string) (config, error) {
 
 	// Default Config
 	c := config{
-		Folder: home + "/.config/fm",
+		Folder: home + "/.config/todo",
 	}
 
 	jb, err := ioutil.ReadAll(j)
