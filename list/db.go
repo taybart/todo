@@ -5,20 +5,18 @@ import (
 	// import dialect
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"os"
+	"path"
 )
 
-func (tl *Todo) connectdb(path, name string) error {
-	if _, err := os.Stat(path); os.IsNotExist(err) {
-		err := os.MkdirAll(path, os.ModePerm)
+func (tl *Todo) connectdb(loc string) error {
+	p := path.Dir(loc)
+	if _, err := os.Stat(p); os.IsNotExist(err) {
+		err := os.MkdirAll(p, os.ModePerm)
 		if err != nil {
 			return err
 		}
 	}
-	n := "td.db"
-	if name != "" {
-		n = name
-	}
-	db, err := gorm.Open("sqlite3", path+"/"+n)
+	db, err := gorm.Open("sqlite3", loc)
 	if err != nil {
 		return err
 	}

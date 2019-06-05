@@ -1,14 +1,15 @@
 package list
 
 import (
-	"github.com/jinzhu/gorm"
-	// import dialect
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"time"
 )
 
 // Item in list
 type Item struct {
-	gorm.Model
+	ID         uint64
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
+	DeletedAt  *time.Time
 	IsDone     bool
 	Contents   string
 	Tags       []*Tag `gorm:"many2many:item_tag;"`
@@ -17,9 +18,12 @@ type Item struct {
 
 // Tag for projects
 type Tag struct {
-	gorm.Model
-	Tag   string
-	Items []*Item `gorm:"many2many:item_tag;"`
+	ID        uint64
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt *time.Time
+	Tag       string
+	Items     []*Item `gorm:"many2many:item_tag;"`
 }
 
 func (t *Tag) String() string {

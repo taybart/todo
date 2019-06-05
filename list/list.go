@@ -6,7 +6,6 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/pkg/errors"
 	"os"
-	"path"
 	"sort"
 )
 
@@ -18,20 +17,20 @@ type Todo struct {
 }
 
 // NewTodo create with default
-func NewTodo(db string) (*Todo, error) {
+func NewTodo(db ...string) (*Todo, error) {
 	tl := &Todo{
 		selected: 0,
 	}
 
-	if db != "" {
-		err := tl.connectdb(path.Dir(db), path.Base(db))
+	if len(db) > 0 && db[0] != "" {
+		err := tl.connectdb(db[0])
 		if err != nil {
 			return nil, errors.Wrap(err, "Connecting to db")
 		}
 	} else {
 		home := os.Getenv("HOME")
-		p := home + "/.local/share/todo"
-		err := tl.connectdb(p, "")
+		p := home + "/.local/share/todo/td.db"
+		err := tl.connectdb(p)
 		if err != nil {
 			return nil, errors.Wrap(err, "Connecting to db")
 		}
@@ -82,6 +81,15 @@ func (tl *Todo) Push(contents string) {
 		Contents:   contents,
 		IsSelected: false,
 	}
+	if len(tl.Items) == 0 {
+		i.IsSelected = true
+	}
+	tl.Items = append(tl.Items, i)
+	tl.db.Save(i)
+}
+
+// PushItem onto list
+func (tl *Todo) PushItem(i *Item) {
 	if len(tl.Items) == 0 {
 		i.IsSelected = true
 	}
