@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.grpc.examples.helloworld";
+option java_outer_classname = "HelloWorldProto";
+
+package todo;
+
+// The greeting service definition.
+service todolist {
+  rpc Sync (SyncParams) returns (List) {}
+  rpc Toggle (ToggleRequest) returns (ToggleReply) {}
+}
+
+message SyncParams {}
+
+// Item in list
+message Item  {
+  uint64 id = 1;
+  bool isDone = 2;
+  string contents = 3;
+}
+message List {
+  repeated Item items = 1;
+}
+
+// The request message containing the user's name.
+message ToggleRequest {
+  uint64 id = 1;
+}
+
+// The response message containing the greetings
+message ToggleReply {
+  string message = 1;
+}
