@@ -16,6 +16,12 @@ const (
 )
 
 func main() {
+	ch := make(chan string)
+	go serve(ch)
+	view(ch)
+}
+
+func serve(ch chan string) {
 	tl, err := list.NewTodo()
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
