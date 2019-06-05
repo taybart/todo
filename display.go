@@ -5,13 +5,6 @@ import (
 	runewidth "github.com/mattn/go-runewidth"
 )
 
-var row = 0
-
-func putln(str string) {
-	puts(tcell.StyleDefault, 1, row, str)
-	row++
-}
-
 func puts(style tcell.Style, x, y int, str string) {
 	i := 0
 	var deferred []rune
