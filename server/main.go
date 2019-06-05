@@ -23,7 +23,7 @@ type server struct{}
 
 // SayHello implements helloworld.GreeterServer
 func (s *server) Toggle(ctx context.Context, in *pb.ToggleRequest) (*pb.ToggleReply, error) {
-	log.Info("Received:", in.Id)
+	log.Info("Toggle:", in.Id)
 	msg := fmt.Sprintf("Toggle %d", in.Id)
 	return &pb.ToggleReply{Message: msg}, nil
 }
