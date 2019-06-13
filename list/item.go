@@ -1,15 +1,8 @@
 package list
 
-import (
-	"time"
-)
-
 // Item in list
 type Item struct {
-	ID         uint64
-	CreatedAt  time.Time
-	UpdatedAt  time.Time
-	DeletedAt  *time.Time
+	Base
 	IsDone     bool
 	Contents   string
 	Tags       []*Tag `gorm:"many2many:item_tag;"`
@@ -18,12 +11,9 @@ type Item struct {
 
 // Tag for projects
 type Tag struct {
-	ID        uint64
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt *time.Time
-	Tag       string
-	Items     []*Item `gorm:"many2many:item_tag;"`
+	Base
+	Tag   string
+	Items []*Item `gorm:"many2many:item_tag;"`
 }
 
 func (t *Tag) String() string {

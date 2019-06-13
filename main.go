@@ -21,6 +21,7 @@ const (
 	additem
 	edititem
 	addtag
+	search
 )
 
 var s tcell.Screen
@@ -80,17 +81,21 @@ func main() {
 		for {
 			s.Clear()
 			showlist(opts, tl)
-			if state != neutral {
-				action := "add"
-				if state == edititem {
-					action = "edit"
-				}
-				if state == addtag {
-					action = "addtag"
-				}
-				_, height := s.Size()
-				puts(tcell.StyleDefault, 1, height-1, action+":"+contents+string(tcell.RuneS9))
+			cmdstr := contents + string(tcell.RuneS9)
+			switch state {
+			case additem:
+				cmdstr = "a: " + cmdstr
+			case edititem:
+				cmdstr = "e: " + cmdstr
+			case addtag:
+				cmdstr = "tag: " + cmdstr
+			case search:
+				cmdstr = "/ " + cmdstr
+			default:
+				cmdstr = ""
 			}
+			_, height := s.Size()
+			puts(tcell.StyleDefault, 1, height-1, cmdstr)
 			s.Show()
 			ev := s.PollEvent()
 			switch ev := ev.(type) {
@@ -148,6 +153,8 @@ func main() {
 						state = addtag
 					case 'd':
 						tl.Del()
+					case '/':
+						state = search
 					case 'q':
 						close(quit)
 						return

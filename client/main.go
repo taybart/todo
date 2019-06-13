@@ -5,6 +5,7 @@ import (
 	"github.com/taybart/log"
 	"time"
 
+	// "github.com/google/uuid"
 	"github.com/taybart/todo/list"
 	pb "github.com/taybart/todo/proto"
 	"google.golang.org/grpc"
@@ -16,32 +17,25 @@ const (
 )
 
 func main() {
-	ch := make(chan string)
-	go serve(ch)
-	view(ch)
-}
-
-func serve(ch chan string) {
-	tl, err := list.NewTodo()
+	tl, err := list.NewTodo("./todo.db")
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
 	defer conn.Close()
-	c := pb.NewTodolistClient(conn)
+	c := pb.NewListClient(conn)
 
 	// Contact the server and print out its response.
-	id := defaultID
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	r, err := c.Toggle(ctx, &pb.ToggleRequest{Id: uint64(id)})
+	r, err := c.Push(ctx, &pb.String{Contents: "test"})
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}
 	log.Info("Greeting:", r.Message)
-	sy, err := c.Sync(ctx, &pb.SyncParams{})
+	sy, err := c.Sync(ctx, &pb.NoParams{})
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}

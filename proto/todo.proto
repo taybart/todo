@@ -7,29 +7,37 @@ option java_outer_classname = "HelloWorldProto";
 package todo;
 
 // The greeting service definition.
-service todolist {
-  rpc Sync (SyncParams) returns (List) {}
-  rpc Toggle (ToggleRequest) returns (ToggleReply) {}
+service list {
+  rpc Sync (NoParams) returns (List) {}
+  rpc Toggle (IDRequest) returns (SimpleReply) {}
+  rpc Push (String) returns (SimpleReply) {}
+  rpc PushItem (Item) returns (SimpleReply) {}
+  rpc Del (IDRequest) returns (SimpleReply) {}
+  rpc Edit (IDRequest) returns (SimpleReply) {}
+  rpc Current (NoParams) returns (Item) {}
 }
 
-message SyncParams {}
+
+message NoParams {}
+message String {
+  string contents = 1;
+}
+message SimpleReply {
+  string message = 1;
+}
 
 // Item in list
 message Item  {
-  uint64 id = 1;
+  string id = 1;
   bool isDone = 2;
   string contents = 3;
 }
+
 message List {
   repeated Item items = 1;
 }
 
 // The request message containing the user's name.
-message ToggleRequest {
-  uint64 id = 1;
-}
-
-// The response message containing the greetings
-message ToggleReply {
-  string message = 1;
+message IDRequest {
+  string id = 1;
 }
